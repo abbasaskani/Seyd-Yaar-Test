@@ -703,8 +703,23 @@ def run_daily(
         for ts_iso in ts_list:
             tid = id_by_iso[ts_iso]
 
-            if (not force) and (times_root / tid / "pcatch_scoring_f32.bin").exists():
-                provider_status.append({"timestamp": ts_iso, "skipped": True, "reason": "already_exists"})
+            # Skip only when the current schema is already complete for this time-id.
+            # Older publishes may contain legacy non-depth files but miss the newer
+            # depth_0m artifacts expected by the current UI.
+            existing_tdir = times_root / tid
+            essential_markers = [
+                existing_tdir / "pcatch_scoring_f32.bin",
+                existing_tdir / "pcatch_ensemble_f32.bin",
+                existing_tdir / "pcatch_ensemble_depth_0m_f32.bin",
+                existing_tdir / "thermocline_f32.bin",
+                existing_tdir / "thermocline_depth_0m_f32.bin",
+                existing_tdir / "o2_f32.bin",
+                existing_tdir / "mld_f32.bin",
+                existing_tdir / "front_fused_f32.bin",
+                existing_tdir / "front_fused_depth_0m_f32.bin",
+            ]
+            if (not force) and existing_tdir.exists() and all(p.exists() for p in essential_markers):
+                provider_status.append({"timestamp": ts_iso, "skipped": True, "reason": "already_exists_complete_schema"})
                 continue
 
             # Cache across species by tid

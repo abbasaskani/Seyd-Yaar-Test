@@ -1116,9 +1116,47 @@ async function scanTimeIdsFromTimesDir(){
 
 function selectedDepthSuffix(){
   const v = $("depthSelect")?.value || "0";
-  // Fast runtime mode: 4/8/12m and weighted are parked and safely resolve to 0 m.
-  if(v === "0") return "_depth_0m";
+  // Fast runtime mode: parked depths prefer the 0 m artifact, but UI must
+  // gracefully fall back to legacy non-depth files when mixed-schema publishes exist.
+  if(v === "weighted") return "_depth_weighted";
+  if(v === "4" || v === "8" || v === "12") return `_depth_${v}m`;
   return "_depth_0m";
+}
+
+function stripDepthSuffix(key){
+  return String(key || "").replace(/_depth_(?:0m|4m|8m|12m|weighted)$/,'');
+}
+
+function perTimeTemplateCandidates(key){
+  const per = state?.meta?.paths?.per_time || {};
+  const out = [];
+  if(key && typeof per[key] === "string") out.push({key, tpl: per[key]});
+  const baseKey = stripDepthSuffix(key);
+  if(baseKey && baseKey !== key && typeof per[baseKey] === "string") out.push({key: baseKey, tpl: per[baseKey]});
+  return out;
+}
+
+async function resolveExistingPerTimeUrl(key, tid){
+  const cands = perTimeTemplateCandidates(key);
+  for(const c of cands){
+    const url = `latest/${state.runPath}/${c.tpl.replace("{time}", tid).replace("{time_id}", tid)}`;
+    if(await exists(url)) return {url, key: c.key};
+  }
+  return null;
+}
+
+async function fetchPerTimeLayer(key, tid, dtype){
+  let lastErr = null;
+  for(const c of perTimeTemplateCandidates(key)){
+    const url = `latest/${state.runPath}/${c.tpl.replace("{time}", tid).replace("{time_id}", tid)}`;
+    try{
+      const arr = await fetchBin(url, dtype);
+      return {arr, url, key: c.key};
+    }catch(err){
+      lastErr = err;
+    }
+  }
+  throw (lastErr || new Error(`Missing per-time layer: ${key} @ ${tid}`));
 }
 
 function currentPerTimeKey(){
@@ -1163,16 +1201,16 @@ function currentPerTimeKey(){
 async function filterTimeIdsByExistingLayer(timeIds){
   try{
     const key = currentPerTimeKey();
-    const tpl = state?.meta?.paths?.per_time?.[key];
-    if(!tpl || typeof tpl!=="string") return timeIds;
+    const cands = perTimeTemplateCandidates(key);
+    if(!cands.length) return timeIds;
 
     const good=[];
     const CONC=6;
     for(let i=0;i<timeIds.length;i+=CONC){
       const chunk = timeIds.slice(i,i+CONC);
       const res = await Promise.all(chunk.map(async tid=>{
-        const url = `latest/${state.runPath}/${tpl.replace("{time}", tid).replace("{time_id}", tid)}`;
-        return (await exists(url)) ? tid : null;
+        const hit = await resolveExistingPerTimeUrl(key, tid);
+        return hit ? tid : null;
       }));
       for(const x of res) if(x) good.push(x);
     }
@@ -1630,8 +1668,8 @@ async function loadCovAtPoints(timeIso, points){
   const dy = (latMax - latMin) / (H-1);
 
   async function loadArr(key, dtype){
-    const url = `latest/${state.runPath}/${state.meta.paths.per_time[key].replace("{time}", timeId)}`;
-    return fetchBin(url, dtype);
+    const got = await fetchPerTimeLayer(key, timeId, dtype);
+    return got.arr;
   }
   const [sst, chl, cur, wav] = await Promise.all([
     loadArr("sst","f32"), loadArr("chl","f32"), loadArr("current","f32"), loadArr("waves","f32")
@@ -1667,8 +1705,8 @@ async function getConfAggregated(timeIsos){
   if(state.qcOn){
     const qcArrs = await Promise.all(timeIsos.map(async t=>{
       const tid = timeIdFromIso(t);
-      const url = `latest/${state.runPath}/${state.meta.paths.per_time.qc_chl.replace("{time}", tid)}`;
-      return fetchBin(url,"u8");
+      const got = await fetchPerTimeLayer("qc_chl", tid, "u8");
+      return got.arr;
     }));
     const qcMean = new Float32Array(conf.length);
     for(let i=0;i<conf.length;i++){
@@ -1769,13 +1807,13 @@ async function computeAndRender(){
   }else{
     key = `pcatch_${modelKey}`;
   }
-    const tpl = state.meta.paths.per_time[key];
-    if(!tpl || typeof tpl !== "string"){
-      console.warn("Missing layer template:", key);
+    try{
+      const got = await fetchPerTimeLayer(key, tid, (key.endsWith("_u8")?"u8":"f32"));
+      return got.arr;
+    }catch(err){
+      console.warn("Missing layer template or file:", key, tid, err);
       return new Float32Array(W*H).fill(NaN);
     }
-    const url = `latest/${state.runPath}/${tpl.replace("{time}", tid)}`;
-    return fetchBin(url, (key.endsWith("_u8")?"u8":"f32"));
   }
 
   const arrs = await Promise.all(timeIsos.map(loadLayerForTime));
