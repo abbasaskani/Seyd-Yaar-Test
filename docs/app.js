@@ -2040,6 +2040,21 @@ async function loadSpeciesMetaAndInit(){
 
   // compute
   setDirty();
+
+  // In offline-map mode there is no basemap, so without an initial render the
+  // viewport can look like a blank white map even when fetches succeeded.
+  const shouldAutoRender = !!($("autoAnalyzeToggle")?.checked);
+  if(state.times?.length && shouldAutoRender){
+    clearTimeout(state._initialRenderTimer);
+    state._initialRenderTimer = setTimeout(async ()=>{
+      try{
+        await computeAndRender();
+        try{ map.invalidateSize(true); }catch(_){ }
+      }catch(err){
+        console.warn('Initial auto-render failed', err);
+      }
+    }, 120);
+  }
 }
 
 /* ------------------------------
@@ -2526,8 +2541,39 @@ function getSelectedTimeId(){
 // ---- Debug / console helpers (so claims are testable) ----
 window.state = state;
 window.__SY = window.__SY || {};
-window.__SY.version = "ui-debug-v3";
+window.__SY.version = "ui-debug-v4";
 window.__SY.setFlipY = (v)=>{ state.renderFlipY = !!v; try{ renderFromCache(); }catch(_){} };
 window.__SY.setBoundsPad = (v)=>{ state.boundsPad = !!v; try{ if(state.grid) state.grid.bounds=null; ensureGridBounds(); renderFromCache(); }catch(_){} };
+window.__SY.diag = ()=>{
+  const img = document.querySelector('#map img.leaflet-image-layer');
+  const arr = state?.lastComputed?.arrAgg;
+  let finite = 0, min = Infinity, max = -Infinity;
+  if(arr && arr.length){
+    for(let i=0;i<arr.length;i++){
+      const v = arr[i];
+      if(Number.isFinite(v)){
+        finite++;
+        if(v < min) min = v;
+        if(v > max) max = v;
+      }
+    }
+  }
+  return {
+    runPath: state.runPath,
+    species: state.species,
+    map: state.map,
+    model: state.model,
+    times: state.timeIds?.length || 0,
+    selectedTime: state.timeIds?.[$('t1Select')?.selectedIndex ?? -1] || null,
+    grid: state.grid,
+    overlayExists: !!window.imageOverlay,
+    overlayImgSrc: img?.src || null,
+    overlayImgOpacity: img ? getComputedStyle(img).opacity : null,
+    finitePixels: finite,
+    minFinite: Number.isFinite(min) ? min : null,
+    maxFinite: Number.isFinite(max) ? max : null,
+    autoAnalyze: !!($("autoAnalyzeToggle")?.checked),
+  };
+};
 window._gridIndexFromLatLon = gridIndexFromLatLon;
 window._rankFromPercentile = (typeof rankFromPercentile==="function") ? rankFromPercentile : ((x)=>null);
