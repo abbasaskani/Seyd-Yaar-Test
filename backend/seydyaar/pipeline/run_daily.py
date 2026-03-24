@@ -739,15 +739,17 @@ def run_daily(
                     except Exception:
                         pass
 
-            t_front = gradient_magnitude(layers["sst_c"])
-            c_front = gradient_magnitude(np.log10(np.clip(layers["chl_mg_m3"], 1e-6, None)))
-            s_front = gradient_magnitude(layers["ssh_m"])
-            f = front_score(
-                t_front, c_front, s_front,
-                w_temp=float(priors.get("front_weights", {}).get("temp", 0.5)),
-                w_chl=float(priors.get("front_weights", {}).get("chl", 0.25)),
-                w_ssh=float(priors.get("front_weights", {}).get("ssh", 0.25)),
-            ).astype(np.float32)
+            front_layers = front_feature_stack(
+                layers["sst_c"],
+                layers["chl_mg_m3"],
+                layers["ssh_m"],
+                priors,
+            )
+            f_gradient = np.asarray(front_layers.get("front_gradient", np.zeros_like(layers["sst_c"])), dtype=np.float32)
+            f_boa = np.asarray(front_layers.get("front_boa", f_gradient), dtype=np.float32)
+            f_cca = np.asarray(front_layers.get("front_cca", f_boa), dtype=np.float32)
+            f_gradhist = np.asarray(front_layers.get("front_gradhist", f_gradient), dtype=np.float32)
+            f = np.asarray(front_layers.get("front_fused", f_boa), dtype=np.float32)
 
             inputs = HabitatInputs(
                 sst_c=layers["sst_c"],
@@ -761,6 +763,14 @@ def run_daily(
                 npp_mmol_m3_day=layers.get("npp_mmol_m3_day"),
             )
             phab, comps = habitat_scoring(inputs, priors=priors, weights=weights)
+            thermocline = np.asarray(
+                comps.get("thermocline_proxy", np.zeros_like(inputs.sst_c)),
+                dtype=np.float32,
+            )
+            oxygen_access = np.asarray(
+                comps.get("oxygen_access", np.zeros_like(inputs.sst_c)),
+                dtype=np.float32,
+            )
             pops = ops_feasibility(inputs.current_m_s, inputs.waves_hs_m, ops_priors, gear_depth_m=10.0)
             pcatch = np.clip(phab * pops, 0, 1).astype(np.float32)
 
@@ -800,14 +810,8 @@ def run_daily(
                 dph, dcomps = habitat_scoring(din, priors=priors, weights=weights)
                 dpo = ops_feasibility(din.current_m_s, din.waves_hs_m, ops_priors, gear_depth_m=float(d))
                 dpc = np.clip(dph * dpo, 0, 1).astype(np.float32)
-                dtf = gradient_magnitude(din.sst_c)
-                dcf = gradient_magnitude(np.log10(np.clip(din.chl_mg_m3, 1e-6, None)))
-                dsf = gradient_magnitude(din.ssh_m)
-                df = front_score(dtf, dcf, dsf,
-                    w_temp=float(priors.get("front_weights", {}).get("temp", 0.5)),
-                    w_chl=float(priors.get("front_weights", {}).get("chl", 0.25)),
-                    w_ssh=float(priors.get("front_weights", {}).get("ssh", 0.25)),
-                ).astype(np.float32)
+                dfront_layers = front_feature_stack(din.sst_c, din.chl_mg_m3, din.ssh_m, priors)
+                df = np.asarray(dfront_layers.get("front_fused", np.zeros_like(din.sst_c)), dtype=np.float32)
                 dm2 = np.clip(dpc * np.clip(0.9 + 0.3 * df, 0.9, 1.2), 0, 1).astype(np.float32)
                 dag, dsp = ensemble_stats([dpc, dm2])
                 depth_raw[d] = dl
