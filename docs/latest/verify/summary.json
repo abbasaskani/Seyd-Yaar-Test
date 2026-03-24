@@ -1,6 +1,6 @@
 {
   "run_id": "main",
-  "generated_at_utc": "2026-03-24T13:41:42.184455Z",
+  "generated_at_utc": "2026-03-24T16:39:58.121677Z",
   "ok": false,
   "missing": [
     "latest/meta.json",
@@ -16,1279 +16,223 @@
   "provider_status": [
     {
       "timestamp": "2026-03-22T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-22T00:00:00+00:00",
-        "chl": "2026-03-22T00:00:00+00:00",
-        "ssh": "2026-03-22T00:00:00+00:00",
-        "currents": "2026-03-22T00:00:00+00:00",
-        "waves": "2026-03-22T00:00:00+00:00",
-        "sss": "2026-03-22T00:00:00+00:00",
-        "mld": "2026-03-22T00:00:00+00:00",
-        "o2": "2026-03-22T00:00:00+00:00",
-        "npp": "2026-03-22T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260322T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260322T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260322T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260322T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260322T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260322T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260322T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260322T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260322T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-22T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-22T06:00:00+00:00",
-        "chl": "2026-03-22T06:00:00+00:00",
-        "ssh": "2026-03-22T06:00:00+00:00",
-        "currents": "2026-03-22T06:00:00+00:00",
-        "waves": "2026-03-22T06:00:00+00:00",
-        "sss": "2026-03-22T06:00:00+00:00",
-        "mld": "2026-03-22T06:00:00+00:00",
-        "o2": "2026-03-22T06:00:00+00:00",
-        "npp": "2026-03-22T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260322T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260322T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260322T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260322T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260322T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260322T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260322T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260322T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260322T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-22T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-22T12:00:00+00:00",
-        "chl": "2026-03-22T12:00:00+00:00",
-        "ssh": "2026-03-22T12:00:00+00:00",
-        "currents": "2026-03-22T12:00:00+00:00",
-        "waves": "2026-03-22T12:00:00+00:00",
-        "sss": "2026-03-22T12:00:00+00:00",
-        "mld": "2026-03-22T12:00:00+00:00",
-        "o2": "2026-03-22T12:00:00+00:00",
-        "npp": "2026-03-22T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260322T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260322T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260322T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260322T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260322T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260322T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260322T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260322T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260322T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-22T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-22T18:00:00+00:00",
-        "chl": "2026-03-22T18:00:00+00:00",
-        "ssh": "2026-03-22T18:00:00+00:00",
-        "currents": "2026-03-22T18:00:00+00:00",
-        "waves": "2026-03-22T18:00:00+00:00",
-        "sss": "2026-03-22T18:00:00+00:00",
-        "mld": "2026-03-22T18:00:00+00:00",
-        "o2": "2026-03-22T18:00:00+00:00",
-        "npp": "2026-03-22T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260322T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260322T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260322T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260322T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260322T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260322T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260322T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260322T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260322T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-23T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-23T00:00:00+00:00",
-        "chl": "2026-03-23T00:00:00+00:00",
-        "ssh": "2026-03-23T00:00:00+00:00",
-        "currents": "2026-03-23T00:00:00+00:00",
-        "waves": "2026-03-23T00:00:00+00:00",
-        "sss": "2026-03-23T00:00:00+00:00",
-        "mld": "2026-03-23T00:00:00+00:00",
-        "o2": "2026-03-23T00:00:00+00:00",
-        "npp": "2026-03-23T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260323T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260323T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260323T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260323T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260323T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260323T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260323T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260323T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260323T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-23T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-23T06:00:00+00:00",
-        "chl": "2026-03-23T06:00:00+00:00",
-        "ssh": "2026-03-23T06:00:00+00:00",
-        "currents": "2026-03-23T06:00:00+00:00",
-        "waves": "2026-03-23T06:00:00+00:00",
-        "sss": "2026-03-23T06:00:00+00:00",
-        "mld": "2026-03-23T06:00:00+00:00",
-        "o2": "2026-03-23T06:00:00+00:00",
-        "npp": "2026-03-23T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260323T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260323T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260323T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260323T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260323T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260323T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260323T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260323T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260323T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-23T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-23T12:00:00+00:00",
-        "chl": "2026-03-23T12:00:00+00:00",
-        "ssh": "2026-03-23T12:00:00+00:00",
-        "currents": "2026-03-23T12:00:00+00:00",
-        "waves": "2026-03-23T12:00:00+00:00",
-        "sss": "2026-03-23T12:00:00+00:00",
-        "mld": "2026-03-23T12:00:00+00:00",
-        "o2": "2026-03-23T12:00:00+00:00",
-        "npp": "2026-03-23T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260323T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260323T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260323T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260323T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260323T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260323T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260323T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260323T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260323T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-23T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-23T18:00:00+00:00",
-        "chl": "2026-03-23T18:00:00+00:00",
-        "ssh": "2026-03-23T18:00:00+00:00",
-        "currents": "2026-03-23T18:00:00+00:00",
-        "waves": "2026-03-23T18:00:00+00:00",
-        "sss": "2026-03-23T18:00:00+00:00",
-        "mld": "2026-03-23T18:00:00+00:00",
-        "o2": "2026-03-23T18:00:00+00:00",
-        "npp": "2026-03-23T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260323T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260323T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260323T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260323T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260323T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260323T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260323T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260323T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260323T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-24T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-24T00:00:00+00:00",
-        "chl": "2026-03-24T00:00:00+00:00",
-        "ssh": "2026-03-24T00:00:00+00:00",
-        "currents": "2026-03-24T00:00:00+00:00",
-        "waves": "2026-03-24T00:00:00+00:00",
-        "sss": "2026-03-24T00:00:00+00:00",
-        "mld": "2026-03-24T00:00:00+00:00",
-        "o2": "2026-03-24T00:00:00+00:00",
-        "npp": "2026-03-24T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260324T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260324T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260324T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260324T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260324T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260324T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260324T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260324T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260324T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-24T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-24T06:00:00+00:00",
-        "chl": "2026-03-24T06:00:00+00:00",
-        "ssh": "2026-03-24T06:00:00+00:00",
-        "currents": "2026-03-24T06:00:00+00:00",
-        "waves": "2026-03-24T06:00:00+00:00",
-        "sss": "2026-03-24T06:00:00+00:00",
-        "mld": "2026-03-24T06:00:00+00:00",
-        "o2": "2026-03-24T06:00:00+00:00",
-        "npp": "2026-03-24T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260324T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260324T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260324T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260324T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260324T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260324T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260324T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260324T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260324T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-24T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-24T12:00:00+00:00",
-        "chl": "2026-03-24T12:00:00+00:00",
-        "ssh": "2026-03-24T12:00:00+00:00",
-        "currents": "2026-03-24T12:00:00+00:00",
-        "waves": "2026-03-24T12:00:00+00:00",
-        "sss": "2026-03-24T12:00:00+00:00",
-        "mld": "2026-03-24T12:00:00+00:00",
-        "o2": "2026-03-24T12:00:00+00:00",
-        "npp": "2026-03-24T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260324T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260324T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260324T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260324T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260324T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260324T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260324T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260324T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260324T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-24T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-24T18:00:00+00:00",
-        "chl": "2026-03-24T18:00:00+00:00",
-        "ssh": "2026-03-24T18:00:00+00:00",
-        "currents": "2026-03-24T18:00:00+00:00",
-        "waves": "2026-03-24T18:00:00+00:00",
-        "sss": "2026-03-24T18:00:00+00:00",
-        "mld": "2026-03-24T18:00:00+00:00",
-        "o2": "2026-03-24T18:00:00+00:00",
-        "npp": "2026-03-24T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260324T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260324T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260324T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260324T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260324T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260324T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260324T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260324T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260324T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-25T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-25T00:00:00+00:00",
-        "chl": "2026-03-25T00:00:00+00:00",
-        "ssh": "2026-03-25T00:00:00+00:00",
-        "currents": "2026-03-25T00:00:00+00:00",
-        "waves": "2026-03-25T00:00:00+00:00",
-        "sss": "2026-03-25T00:00:00+00:00",
-        "mld": "2026-03-25T00:00:00+00:00",
-        "o2": "2026-03-25T00:00:00+00:00",
-        "npp": "2026-03-25T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260325T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260325T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260325T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260325T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260325T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260325T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260325T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260325T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260325T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-25T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-25T06:00:00+00:00",
-        "chl": "2026-03-25T06:00:00+00:00",
-        "ssh": "2026-03-25T06:00:00+00:00",
-        "currents": "2026-03-25T06:00:00+00:00",
-        "waves": "2026-03-25T06:00:00+00:00",
-        "sss": "2026-03-25T06:00:00+00:00",
-        "mld": "2026-03-25T06:00:00+00:00",
-        "o2": "2026-03-25T06:00:00+00:00",
-        "npp": "2026-03-25T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260325T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260325T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260325T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260325T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260325T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260325T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260325T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260325T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260325T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-25T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-25T12:00:00+00:00",
-        "chl": "2026-03-25T12:00:00+00:00",
-        "ssh": "2026-03-25T12:00:00+00:00",
-        "currents": "2026-03-25T12:00:00+00:00",
-        "waves": "2026-03-25T12:00:00+00:00",
-        "sss": "2026-03-25T12:00:00+00:00",
-        "mld": "2026-03-25T12:00:00+00:00",
-        "o2": "2026-03-25T12:00:00+00:00",
-        "npp": "2026-03-25T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260325T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260325T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260325T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260325T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260325T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260325T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260325T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260325T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260325T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-25T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-25T18:00:00+00:00",
-        "chl": "2026-03-25T18:00:00+00:00",
-        "ssh": "2026-03-25T18:00:00+00:00",
-        "currents": "2026-03-25T18:00:00+00:00",
-        "waves": "2026-03-25T18:00:00+00:00",
-        "sss": "2026-03-25T18:00:00+00:00",
-        "mld": "2026-03-25T18:00:00+00:00",
-        "o2": "2026-03-25T18:00:00+00:00",
-        "npp": "2026-03-25T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260325T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260325T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260325T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260325T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260325T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260325T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260325T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260325T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260325T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-26T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-26T00:00:00+00:00",
-        "chl": "2026-03-26T00:00:00+00:00",
-        "ssh": "2026-03-26T00:00:00+00:00",
-        "currents": "2026-03-26T00:00:00+00:00",
-        "waves": "2026-03-26T00:00:00+00:00",
-        "sss": "2026-03-26T00:00:00+00:00",
-        "mld": "2026-03-26T00:00:00+00:00",
-        "o2": "2026-03-26T00:00:00+00:00",
-        "npp": "2026-03-26T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260326T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260326T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260326T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260326T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260326T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260326T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260326T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260326T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260326T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-26T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-26T06:00:00+00:00",
-        "chl": "2026-03-26T06:00:00+00:00",
-        "ssh": "2026-03-26T06:00:00+00:00",
-        "currents": "2026-03-26T06:00:00+00:00",
-        "waves": "2026-03-26T06:00:00+00:00",
-        "sss": "2026-03-26T06:00:00+00:00",
-        "mld": "2026-03-26T06:00:00+00:00",
-        "o2": "2026-03-26T06:00:00+00:00",
-        "npp": "2026-03-26T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260326T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260326T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260326T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260326T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260326T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260326T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260326T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260326T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260326T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-26T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-26T12:00:00+00:00",
-        "chl": "2026-03-26T12:00:00+00:00",
-        "ssh": "2026-03-26T12:00:00+00:00",
-        "currents": "2026-03-26T12:00:00+00:00",
-        "waves": "2026-03-26T12:00:00+00:00",
-        "sss": "2026-03-26T12:00:00+00:00",
-        "mld": "2026-03-26T12:00:00+00:00",
-        "o2": "2026-03-26T12:00:00+00:00",
-        "npp": "2026-03-26T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260326T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260326T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260326T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260326T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260326T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260326T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260326T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260326T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260326T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-26T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-26T18:00:00+00:00",
-        "chl": "2026-03-26T18:00:00+00:00",
-        "ssh": "2026-03-26T18:00:00+00:00",
-        "currents": "2026-03-26T18:00:00+00:00",
-        "waves": "2026-03-26T18:00:00+00:00",
-        "sss": "2026-03-26T18:00:00+00:00",
-        "mld": "2026-03-26T18:00:00+00:00",
-        "o2": "2026-03-26T18:00:00+00:00",
-        "npp": "2026-03-26T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260326T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260326T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260326T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260326T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260326T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260326T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260326T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260326T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260326T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-27T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-27T00:00:00+00:00",
-        "chl": "2026-03-27T00:00:00+00:00",
-        "ssh": "2026-03-27T00:00:00+00:00",
-        "currents": "2026-03-27T00:00:00+00:00",
-        "waves": "2026-03-27T00:00:00+00:00",
-        "sss": "2026-03-27T00:00:00+00:00",
-        "mld": "2026-03-27T00:00:00+00:00",
-        "o2": "2026-03-27T00:00:00+00:00",
-        "npp": "2026-03-27T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260327T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260327T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260327T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260327T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260327T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260327T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260327T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260327T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260327T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-27T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-27T06:00:00+00:00",
-        "chl": "2026-03-27T06:00:00+00:00",
-        "ssh": "2026-03-27T06:00:00+00:00",
-        "currents": "2026-03-27T06:00:00+00:00",
-        "waves": "2026-03-27T06:00:00+00:00",
-        "sss": "2026-03-27T06:00:00+00:00",
-        "mld": "2026-03-27T06:00:00+00:00",
-        "o2": "2026-03-27T06:00:00+00:00",
-        "npp": "2026-03-27T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260327T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260327T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260327T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260327T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260327T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260327T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260327T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260327T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260327T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-27T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-27T12:00:00+00:00",
-        "chl": "2026-03-27T12:00:00+00:00",
-        "ssh": "2026-03-27T12:00:00+00:00",
-        "currents": "2026-03-27T12:00:00+00:00",
-        "waves": "2026-03-27T12:00:00+00:00",
-        "sss": "2026-03-27T12:00:00+00:00",
-        "mld": "2026-03-27T12:00:00+00:00",
-        "o2": "2026-03-27T12:00:00+00:00",
-        "npp": "2026-03-27T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260327T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260327T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260327T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260327T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260327T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260327T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260327T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260327T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260327T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-27T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-27T18:00:00+00:00",
-        "chl": "2026-03-27T18:00:00+00:00",
-        "ssh": "2026-03-27T18:00:00+00:00",
-        "currents": "2026-03-27T18:00:00+00:00",
-        "waves": "2026-03-27T18:00:00+00:00",
-        "sss": "2026-03-27T18:00:00+00:00",
-        "mld": "2026-03-27T18:00:00+00:00",
-        "o2": "2026-03-27T18:00:00+00:00",
-        "npp": "2026-03-27T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260327T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260327T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260327T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260327T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260327T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260327T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260327T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260327T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260327T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-28T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-28T00:00:00+00:00",
-        "chl": "2026-03-28T00:00:00+00:00",
-        "ssh": "2026-03-28T00:00:00+00:00",
-        "currents": "2026-03-28T00:00:00+00:00",
-        "waves": "2026-03-28T00:00:00+00:00",
-        "sss": "2026-03-28T00:00:00+00:00",
-        "mld": "2026-03-28T00:00:00+00:00",
-        "o2": "2026-03-28T00:00:00+00:00",
-        "npp": "2026-03-28T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260328T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260328T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260328T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260328T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260328T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260328T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260328T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260328T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260328T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-28T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-28T06:00:00+00:00",
-        "chl": "2026-03-28T06:00:00+00:00",
-        "ssh": "2026-03-28T06:00:00+00:00",
-        "currents": "2026-03-28T06:00:00+00:00",
-        "waves": "2026-03-28T06:00:00+00:00",
-        "sss": "2026-03-28T06:00:00+00:00",
-        "mld": "2026-03-28T06:00:00+00:00",
-        "o2": "2026-03-28T06:00:00+00:00",
-        "npp": "2026-03-28T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260328T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260328T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260328T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260328T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260328T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260328T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260328T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260328T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260328T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-28T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-28T12:00:00+00:00",
-        "chl": "2026-03-28T12:00:00+00:00",
-        "ssh": "2026-03-28T12:00:00+00:00",
-        "currents": "2026-03-28T12:00:00+00:00",
-        "waves": "2026-03-28T12:00:00+00:00",
-        "sss": "2026-03-28T12:00:00+00:00",
-        "mld": "2026-03-28T12:00:00+00:00",
-        "o2": "2026-03-28T12:00:00+00:00",
-        "npp": "2026-03-28T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260328T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260328T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260328T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260328T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260328T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260328T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260328T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260328T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260328T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-28T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-28T18:00:00+00:00",
-        "chl": "2026-03-28T18:00:00+00:00",
-        "ssh": "2026-03-28T18:00:00+00:00",
-        "currents": "2026-03-28T18:00:00+00:00",
-        "waves": "2026-03-28T18:00:00+00:00",
-        "sss": "2026-03-28T18:00:00+00:00",
-        "mld": "2026-03-28T18:00:00+00:00",
-        "o2": "2026-03-28T18:00:00+00:00",
-        "npp": "2026-03-28T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260328T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260328T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260328T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260328T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260328T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260328T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260328T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260328T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260328T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-29T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-29T00:00:00+00:00",
-        "chl": "2026-03-29T00:00:00+00:00",
-        "ssh": "2026-03-29T00:00:00+00:00",
-        "currents": "2026-03-29T00:00:00+00:00",
-        "waves": "2026-03-29T00:00:00+00:00",
-        "sss": "2026-03-29T00:00:00+00:00",
-        "mld": "2026-03-29T00:00:00+00:00",
-        "o2": "2026-03-29T00:00:00+00:00",
-        "npp": "2026-03-29T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260329T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260329T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260329T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260329T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260329T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260329T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260329T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260329T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260329T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-29T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-29T06:00:00+00:00",
-        "chl": "2026-03-29T06:00:00+00:00",
-        "ssh": "2026-03-29T06:00:00+00:00",
-        "currents": "2026-03-29T06:00:00+00:00",
-        "waves": "2026-03-29T06:00:00+00:00",
-        "sss": "2026-03-29T06:00:00+00:00",
-        "mld": "2026-03-29T06:00:00+00:00",
-        "o2": "2026-03-29T06:00:00+00:00",
-        "npp": "2026-03-29T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260329T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260329T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260329T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260329T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260329T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260329T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260329T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260329T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260329T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-29T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-29T12:00:00+00:00",
-        "chl": "2026-03-29T12:00:00+00:00",
-        "ssh": "2026-03-29T12:00:00+00:00",
-        "currents": "2026-03-29T12:00:00+00:00",
-        "waves": "2026-03-29T12:00:00+00:00",
-        "sss": "2026-03-29T12:00:00+00:00",
-        "mld": "2026-03-29T12:00:00+00:00",
-        "o2": "2026-03-29T12:00:00+00:00",
-        "npp": "2026-03-29T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260329T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260329T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260329T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260329T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260329T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260329T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260329T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260329T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260329T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-29T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-29T18:00:00+00:00",
-        "chl": "2026-03-29T18:00:00+00:00",
-        "ssh": "2026-03-29T18:00:00+00:00",
-        "currents": "2026-03-29T18:00:00+00:00",
-        "waves": "2026-03-29T18:00:00+00:00",
-        "sss": "2026-03-29T18:00:00+00:00",
-        "mld": "2026-03-29T18:00:00+00:00",
-        "o2": "2026-03-29T18:00:00+00:00",
-        "npp": "2026-03-29T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260329T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260329T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260329T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260329T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260329T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260329T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260329T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260329T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260329T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-30T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-30T00:00:00+00:00",
-        "chl": "2026-03-30T00:00:00+00:00",
-        "ssh": "2026-03-30T00:00:00+00:00",
-        "currents": "2026-03-30T00:00:00+00:00",
-        "waves": "2026-03-30T00:00:00+00:00",
-        "sss": "2026-03-30T00:00:00+00:00",
-        "mld": "2026-03-30T00:00:00+00:00",
-        "o2": "2026-03-30T00:00:00+00:00",
-        "npp": "2026-03-30T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260330T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260330T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260330T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260330T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260330T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260330T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260330T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260330T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260330T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-30T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-30T06:00:00+00:00",
-        "chl": "2026-03-30T06:00:00+00:00",
-        "ssh": "2026-03-30T06:00:00+00:00",
-        "currents": "2026-03-30T06:00:00+00:00",
-        "waves": "2026-03-30T06:00:00+00:00",
-        "sss": "2026-03-30T06:00:00+00:00",
-        "mld": "2026-03-30T06:00:00+00:00",
-        "o2": "2026-03-30T06:00:00+00:00",
-        "npp": "2026-03-30T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260330T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260330T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260330T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260330T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260330T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260330T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260330T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260330T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260330T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-30T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-30T12:00:00+00:00",
-        "chl": "2026-03-30T12:00:00+00:00",
-        "ssh": "2026-03-30T12:00:00+00:00",
-        "currents": "2026-03-30T12:00:00+00:00",
-        "waves": "2026-03-30T12:00:00+00:00",
-        "sss": "2026-03-30T12:00:00+00:00",
-        "mld": "2026-03-30T12:00:00+00:00",
-        "o2": "2026-03-30T12:00:00+00:00",
-        "npp": "2026-03-30T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260330T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260330T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260330T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260330T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260330T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260330T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260330T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260330T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260330T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-30T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-30T18:00:00+00:00",
-        "chl": "2026-03-30T18:00:00+00:00",
-        "ssh": "2026-03-30T18:00:00+00:00",
-        "currents": "2026-03-30T18:00:00+00:00",
-        "waves": "2026-03-30T18:00:00+00:00",
-        "sss": "2026-03-30T18:00:00+00:00",
-        "mld": "2026-03-30T18:00:00+00:00",
-        "o2": "2026-03-30T18:00:00+00:00",
-        "npp": "2026-03-30T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260330T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260330T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260330T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260330T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260330T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260330T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260330T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260330T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260330T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-31T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-31T00:00:00+00:00",
-        "chl": "2026-03-31T00:00:00+00:00",
-        "ssh": "2026-03-31T00:00:00+00:00",
-        "currents": "2026-03-31T00:00:00+00:00",
-        "waves": "2026-03-31T00:00:00+00:00",
-        "sss": "2026-03-31T00:00:00+00:00",
-        "mld": "2026-03-31T00:00:00+00:00",
-        "o2": "2026-03-31T00:00:00+00:00",
-        "npp": "2026-03-31T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260331T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260331T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260331T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260331T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260331T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260331T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260331T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260331T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260331T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-31T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-31T06:00:00+00:00",
-        "chl": "2026-03-31T06:00:00+00:00",
-        "ssh": "2026-03-31T06:00:00+00:00",
-        "currents": "2026-03-31T06:00:00+00:00",
-        "waves": "2026-03-31T06:00:00+00:00",
-        "sss": "2026-03-31T06:00:00+00:00",
-        "mld": "2026-03-31T06:00:00+00:00",
-        "o2": "2026-03-31T06:00:00+00:00",
-        "npp": "2026-03-31T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260331T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260331T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260331T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260331T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260331T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260331T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260331T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260331T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260331T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-31T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-31T12:00:00+00:00",
-        "chl": "2026-03-31T12:00:00+00:00",
-        "ssh": "2026-03-31T12:00:00+00:00",
-        "currents": "2026-03-31T12:00:00+00:00",
-        "waves": "2026-03-31T12:00:00+00:00",
-        "sss": "2026-03-31T12:00:00+00:00",
-        "mld": "2026-03-31T12:00:00+00:00",
-        "o2": "2026-03-31T12:00:00+00:00",
-        "npp": "2026-03-31T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260331T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260331T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260331T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260331T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260331T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260331T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260331T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260331T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260331T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-03-31T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-03-31T18:00:00+00:00",
-        "chl": "2026-03-31T18:00:00+00:00",
-        "ssh": "2026-03-31T18:00:00+00:00",
-        "currents": "2026-03-31T18:00:00+00:00",
-        "waves": "2026-03-31T18:00:00+00:00",
-        "sss": "2026-03-31T18:00:00+00:00",
-        "mld": "2026-03-31T18:00:00+00:00",
-        "o2": "2026-03-31T18:00:00+00:00",
-        "npp": "2026-03-31T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260331T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260331T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260331T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260331T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260331T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260331T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260331T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260331T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260331T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-04-01T00:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-04-01T00:00:00+00:00",
-        "chl": "2026-04-01T00:00:00+00:00",
-        "ssh": "2026-04-01T00:00:00+00:00",
-        "currents": "2026-04-01T00:00:00+00:00",
-        "waves": "2026-04-01T00:00:00+00:00",
-        "sss": "2026-04-01T00:00:00+00:00",
-        "mld": "2026-04-01T00:00:00+00:00",
-        "o2": "2026-04-01T00:00:00+00:00",
-        "npp": "2026-04-01T00:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260401T000000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260401T000000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260401T000000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260401T000000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260401T000000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260401T000000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260401T000000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260401T000000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260401T000000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-04-01T06:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-04-01T06:00:00+00:00",
-        "chl": "2026-04-01T06:00:00+00:00",
-        "ssh": "2026-04-01T06:00:00+00:00",
-        "currents": "2026-04-01T06:00:00+00:00",
-        "waves": "2026-04-01T06:00:00+00:00",
-        "sss": "2026-04-01T06:00:00+00:00",
-        "mld": "2026-04-01T06:00:00+00:00",
-        "o2": "2026-04-01T06:00:00+00:00",
-        "npp": "2026-04-01T06:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260401T060000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260401T060000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260401T060000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260401T060000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260401T060000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260401T060000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260401T060000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260401T060000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260401T060000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-04-01T12:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-04-01T12:00:00+00:00",
-        "chl": "2026-04-01T12:00:00+00:00",
-        "ssh": "2026-04-01T12:00:00+00:00",
-        "currents": "2026-04-01T12:00:00+00:00",
-        "waves": "2026-04-01T12:00:00+00:00",
-        "sss": "2026-04-01T12:00:00+00:00",
-        "mld": "2026-04-01T12:00:00+00:00",
-        "o2": "2026-04-01T12:00:00+00:00",
-        "npp": "2026-04-01T12:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260401T120000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260401T120000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260401T120000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260401T120000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260401T120000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260401T120000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260401T120000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260401T120000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260401T120000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     },
     {
       "timestamp": "2026-04-01T18:00:00+00:00",
-      "provider": "copernicusmarine",
-      "ok": true,
-      "errors": [],
-      "resolved_times": {
-        "sst": "2026-04-01T18:00:00+00:00",
-        "chl": "2026-04-01T18:00:00+00:00",
-        "ssh": "2026-04-01T18:00:00+00:00",
-        "currents": "2026-04-01T18:00:00+00:00",
-        "waves": "2026-04-01T18:00:00+00:00",
-        "sss": "2026-04-01T18:00:00+00:00",
-        "mld": "2026-04-01T18:00:00+00:00",
-        "o2": "2026-04-01T18:00:00+00:00",
-        "npp": "2026-04-01T18:00:00+00:00"
-      },
-      "nc_paths": {
-        "sst": "backend/.seydyaar_tmp/sst_20260401T180000.nc",
-        "chl": "backend/.seydyaar_tmp/chl_20260401T180000.nc",
-        "ssh": "backend/.seydyaar_tmp/ssh_20260401T180000.nc",
-        "currents": "backend/.seydyaar_tmp/currents_20260401T180000.nc",
-        "waves": "backend/.seydyaar_tmp/waves_20260401T180000.nc",
-        "sss": "backend/.seydyaar_tmp/sss_20260401T180000.nc",
-        "mld": "backend/.seydyaar_tmp/mld_20260401T180000.nc",
-        "o2": "backend/.seydyaar_tmp/o2_20260401T180000.nc",
-        "npp": "backend/.seydyaar_tmp/npp_20260401T180000.nc"
-      },
-      "warnings": []
+      "skipped": true,
+      "reason": "already_exists_complete_schema"
     }
   ]
 }
