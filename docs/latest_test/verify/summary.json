@@ -1,0 +1,27 @@
+{
+  "run_id": "main",
+  "generated_at_utc": "2026-03-24T02:11:00.666661Z",
+  "ok": false,
+  "missing": [
+    "latest/meta.json",
+    "runs/main/auto/skipjack/20260320_0000Z/pcatch_ensemble_f32.bin",
+    "runs/main/auto/skipjack/20260320_0000Z/phab_f32.bin",
+    "runs/main/auto/skipjack/20260320_0000Z/pops_f32.bin",
+    "runs/main/auto/skipjack/20260320_0000Z/front_f32.bin",
+    "runs/main/auto/yellowfin/20260320_0000Z/pcatch_ensemble_f32.bin",
+    "runs/main/auto/yellowfin/20260320_0000Z/phab_f32.bin",
+    "runs/main/auto/yellowfin/20260320_0000Z/pops_f32.bin",
+    "runs/main/auto/yellowfin/20260320_0000Z/front_f32.bin"
+  ],
+  "provider_status": [
+    {
+      "timestamp": "2026-03-20T00:00:00+00:00",
+      "provider": "copernicusmarine",
+      "ok": false,
+      "errors": [
+        "missing Copernicus credentials (COPERNICUS_MARINE_* or COPERNICUSMARINE_SERVICE_*)"
+      ],
+      "fallback": "synthetic"
+    }
+  ]
+}

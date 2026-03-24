@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Seyd‑Yaar redirect</title>
+  <meta http-equiv="refresh" content="0; url=./app.html" />
+  <script>
+    (function(){
+      try{
+        const parts = location.pathname.split('/').filter(Boolean);
+        const repoBase = parts.length ? '/' + parts[0] : '';
+        const target = repoBase + '/app.html' + (location.search || '') + (location.hash || '');
+        location.replace(target);
+      }catch(_){
+        location.replace('./app.html');
+      }
+    })();
+  </script>
+  <style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#041b2d;color:#e6f4ff;display:grid;place-items:center;height:100vh;margin:0}a{color:#7dd3fc}</style>
+</head>
+<body>
+  <div>Redirecting to Seyd‑Yaar… <a href="./app.html">Open app</a></div>
+</body>
+</html>
