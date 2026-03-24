@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Tuple
 import numpy as np
 from shapely.geometry import shape, Point
+from shapely.ops import unary_union
 from shapely.prepared import prep
 
 @dataclass(frozen=True)
@@ -37,16 +38,46 @@ class GridSpec:
     def lats(self) -> np.ndarray:
         return np.linspace(self.lat_max, self.lat_min, self.height, dtype=np.float32)
 
-def bbox_from_geojson(aoi_geojson: dict) -> Tuple[float,float,float,float]:
-    geom = shape(aoi_geojson["features"][0]["geometry"])
-    minx, miny, maxx, maxy = geom.bounds
+
+def _merged_geom_from_geojson(aoi_geojson: dict):
+    feats = aoi_geojson.get("features") or []
+    geoms = []
+    for feat in feats:
+        geom = feat.get("geometry") if isinstance(feat, dict) else None
+        if geom:
+            try:
+                geoms.append(shape(geom))
+            except Exception:
+                pass
+    if not geoms:
+        raise ValueError("AOI GeoJSON has no valid geometries")
+    return unary_union(geoms)
+
+
+def _pad_degenerate_bounds(minx: float, miny: float, maxx: float, maxy: float) -> Tuple[float,float,float,float]:
+    # Protect the UI and raster export against point/line-like AOIs or bad inputs.
+    span_x = maxx - minx
+    span_y = maxy - miny
+    eps_x = 0.25 if span_x == 0 else max(span_x * 0.005, 1e-4)
+    eps_y = 0.25 if span_y == 0 else max(span_y * 0.005, 1e-4)
+    if span_x == 0:
+        minx -= eps_x
+        maxx += eps_x
+    if span_y == 0:
+        miny -= eps_y
+        maxy += eps_y
     return float(minx), float(miny), float(maxx), float(maxy)
+
+def bbox_from_geojson(aoi_geojson: dict) -> Tuple[float,float,float,float]:
+    geom = _merged_geom_from_geojson(aoi_geojson)
+    minx, miny, maxx, maxy = geom.bounds
+    return _pad_degenerate_bounds(minx, miny, maxx, maxy)
 
 def mask_from_geojson(aoi_geojson: dict, grid: GridSpec) -> np.ndarray:
     """
     Returns uint8 mask (1 inside AOI, 0 outside) with shape (H, W), aligned with grid lon/lat mesh.
     """
-    geom = shape(aoi_geojson["features"][0]["geometry"])
+    geom = _merged_geom_from_geojson(aoi_geojson)
     pg = prep(geom)
 
     lon2d, lat2d = grid.lonlat_mesh()
@@ -56,6 +87,7 @@ def mask_from_geojson(aoi_geojson: dict, grid: GridSpec) -> np.ndarray:
     # vectorized point-in-polygon is nontrivial; do a fast loop (H*W is small in demo)
     for i in range(H):
         for j in range(W):
-            if pg.contains(Point(float(lon2d[i, j]), float(lat2d[i, j]))):
+            pt = Point(float(lon2d[i, j]), float(lat2d[i, j]))
+            if pg.covers(pt):
                 mask[i, j] = 1
     return mask

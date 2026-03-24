@@ -641,6 +641,7 @@ def run_daily(
             "species": sp,
             "label": prof.get("label", {}),
             "grid": run_meta["grid"],
+            "bbox": run_meta["bbox"],
             "times": ts_list,
             "time_ids": time_ids,
             "paths": {

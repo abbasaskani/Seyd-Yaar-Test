@@ -160,37 +160,111 @@ const state = {
   qcMaskCache: new Map(), // timeId-> Uint8Array
   // Rendering toggles
   renderFlipY: false,
+  dataNorthFirst: true, // ✅ row0 is NORTH (fixes flip confusion)
   boundsPad: true,
+  // Manual georeferencing tweak (degrees): shifts raster/click mapping without touching data
+  manualLatOffset: -0.27,
+  manualLonOffset: -0.01242,
+
 };
+
+// --- Click suppression for priority markers ---
+// We use both a timestamp (until) and a simple boolean alias for easy debugging in console.
+// Note: Leaflet may still propagate clicks unless we explicitly stop propagation on marker events.
+state.__suppressMapClickUntil = 0;
+state.__suppressMapClick = false;
+
+function suppressNextMapClick(ms=250){
+  state.__suppressMapClick = true;
+  state.__suppressMapClickUntil = Date.now() + ms;
+}
+
+function isMapClickSuppressed(){
+  const on = Date.now() < (state.__suppressMapClickUntil || 0);
+  state.__suppressMapClick = on;
+  return on;
+}
 
 // Ensure Leaflet bounds exist. meta.grid provides lon/lat min/max but not bounds.
 // Leaflet imageOverlay expects [[S,W],[N,E]] in lat/lon.
 function ensureGridBounds(){
   if(!state.grid) return null;
   const g = state.grid;
-  const latMin = g.lat_min, latMax = g.lat_max;
-  const lonMin = g.lon_min, lonMax = g.lon_max;
   const W = g.width, H = g.height;
-  if([latMin, latMax, lonMin, lonMax, W, H].every(Number.isFinite)){
-    const dx = (lonMax-lonMin) / Math.max(1,(W-1));
-    const dy = (latMax-latMin) / Math.max(1,(H-1));
+
+  function applyOffsetsAndPad(latMin, lonMin, latMax, lonMax){
+    let minLat = Number(latMin), minLon = Number(lonMin), maxLat = Number(latMax), maxLon = Number(lonMax);
+    if(![minLat, minLon, maxLat, maxLon].every(Number.isFinite)) return null;
+    if(minLat > maxLat){ const t=minLat; minLat=maxLat; maxLat=t; }
+    if(minLon > maxLon){ const t=minLon; minLon=maxLon; maxLon=t; }
+    const spanLat = maxLat - minLat;
+    const spanLon = maxLon - minLon;
+    const safeLat = spanLat === 0 ? 0.25 : Math.max(spanLat / Math.max(1,(H-1)), spanLat * 0.005, 1e-4);
+    const safeLon = spanLon === 0 ? 0.25 : Math.max(spanLon / Math.max(1,(W-1)), spanLon * 0.005, 1e-4);
+    if(spanLat === 0){ minLat -= safeLat/2; maxLat += safeLat/2; }
+    if(spanLon === 0){ minLon -= safeLon/2; maxLon += safeLon/2; }
     const pad = !!state.boundsPad;
     const b = pad
-      ? [[latMin - dy/2, lonMin - dx/2],[latMax + dy/2, lonMax + dx/2]]
-      : [[latMin, lonMin],[latMax, lonMax]];
+      ? [[minLat - safeLat/2, minLon - safeLon/2],[maxLat + safeLat/2, maxLon + safeLon/2]]
+      : [[minLat, minLon],[maxLat, maxLon]];
+    const dLat = Number(state.manualLatOffset||0);
+    const dLon = Number(state.manualLonOffset||0);
+    if(dLat || dLon){
+      b[0][0] += dLat; b[1][0] += dLat;
+      b[0][1] += dLon; b[1][1] += dLon;
+    }
+    g.lat_min = minLat; g.lat_max = maxLat; g.lon_min = minLon; g.lon_max = maxLon;
     g.bounds = b;
     return b;
   }
-  const bb = g.bbox;
-  if(Array.isArray(bb) && bb.length===4){
-    const b = [[bb[1], bb[0]],[bb[3], bb[2]]];
-    g.bounds = b;
-    return b;
+
+  const latMin = g.lat_min, latMax = g.lat_max;
+  const lonMin = g.lon_min, lonMax = g.lon_max;
+  if([latMin, latMax, lonMin, lonMax, W, H].every(Number.isFinite)){
+    const fromGrid = applyOffsetsAndPad(latMin, lonMin, latMax, lonMax);
+    if(fromGrid && (latMin !== latMax || lonMin !== lonMax)) return fromGrid;
   }
+
+  const bb = g.bbox || state.meta?.bbox || state.runMeta?.bbox;
+  if(Array.isArray(bb) && bb.length===4 && bb.every(Number.isFinite)){
+    return applyOffsetsAndPad(bb[1], bb[0], bb[3], bb[2]);
+  }
+
+  const fallback = applyOffsetsAndPad(latMin, lonMin, latMax, lonMax);
+  if(fallback) return fallback;
   return null;
 }
 
 
+
+// Convert between grid pixel coords (x,y) and lat/lon using current bounds + flip
+function xyToLatLon(x, y){
+  const g = state.grid; if(!g) return null;
+  const W=g.width, H=g.height;
+  const b = ensureGridBounds(); if(!b) return null;
+  const south=b[0][0], west=b[0][1], north=b[1][0], east=b[1][1];
+  const xCl = Math.max(0, Math.min(W-1, x));
+  const yCl = Math.max(0, Math.min(H-1, y));
+    const yImg = state.dataNorthFirst ? yCl : (H-1 - yCl); // image-space y (0=north)
+  const fx = (W<=1) ? 0 : (xCl/(W-1));
+  const fy = (H<=1) ? 0 : (yImg/(H-1));
+  const lon = west + fx*(east-west);
+  const lat = north - fy*(north-south);
+  return {lat, lon};
+}
+function latLonToXY(lat, lon){
+  const g = state.grid; if(!g) return null;
+  const W=g.width, H=g.height;
+  const b = ensureGridBounds(); if(!b) return null;
+  const south=b[0][0], west=b[0][1], north=b[1][0], east=b[1][1];
+  if(lat<south || lat>north || lon<west || lon>east) return null;
+  const fx = (lon - west) / (east - west);
+  const fyN = (north - lat) / (north - south); // image y (0=north)
+  const x = Math.max(0, Math.min(W-1, Math.round(fx*(W-1))));
+  const yImg = Math.max(0, Math.min(H-1, Math.round(fyN*(H-1))));
+    const y = state.dataNorthFirst ? yImg : (H-1 - yImg);
+  return {x,y,i:y*W+x};
+}
 
 function fmtTime(isoZ){
   try{
@@ -301,31 +375,74 @@ function combineMask(base, extra){
   }
   return out;
 }
+function countMaskOnes(mask){
+  if(!mask) return 0;
+  let ones = 0;
+  for(let i=0;i<mask.length;i++) if(mask[i]===1) ones++;
+  return ones;
+}
+function normalizeServerMask(mask){
+  if(!mask || !mask.length) return mask;
+  const ones = countMaskOnes(mask);
+  if(ones>0) return mask;
+  const out = new Uint8Array(mask.length);
+  out.fill(1);
+  try{ console.warn("[SeydYaar] server mask is all-zero; falling back to all-ones mask for rendering"); }catch(_){}
+  try{ toast?.("Server mask was all-zero; using fallback valid mask", "warn", "Mask fallback"); }catch(_){}
+  return out;
+}
 /* ------------------------------
    Leaflet map
 ------------------------------ */
-let map, imageOverlay, markerLayer, offlineGridLayer;
-function buildOfflineReferenceGrid(){
-  if(!map) return;
-  if(offlineGridLayer){ try{ map.removeLayer(offlineGridLayer); }catch(_){} }
-  const group = L.layerGroup();
-  const latLines = [];
-  const lonLines = [];
-  for(let lat=-90; lat<=90; lat+=1){
-    latLines.push(L.polyline([[lat,-180],[lat,180]], {color:'#234b63', weight:(lat%5===0?1.1:0.5), opacity:(lat%5===0?0.42:0.22), interactive:false}));
-  }
-  for(let lon=-180; lon<=180; lon+=1){
-    lonLines.push(L.polyline([[-90,lon],[90,lon]], {color:'#234b63', weight:(lon%5===0?1.1:0.5), opacity:(lon%5===0?0.42:0.22), interactive:false}));
-  }
-  [...latLines, ...lonLines].forEach(l=>group.addLayer(l));
-  offlineGridLayer = group.addTo(map);
-}
+let map, imageOverlay, markerLayer;
 function initMap(){
-  map = L.map('map', {preferCanvas:true, zoomControl:true, attributionControl:false});
-  const hint = document.getElementById('offlineMapHint');
-  if(hint) hint.hidden = false;
+  map = L.map('map', {preferCanvas:true});
+  // 🗺️ Basemap with automatic fallback
+  // In some networks/regions the default OSM tile endpoint may be blocked or rate-limited.
+  // If we detect repeated tile errors, we automatically switch to a mirror.
+  const basemaps = [
+    {
+      name: "OSM",
+      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      opts: { subdomains: "abc", maxZoom: 18, attribution: "&copy; OpenStreetMap" }
+    },
+    {
+      name: "Carto",
+      url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+      opts: { subdomains: "abcd", maxZoom: 19, attribution: "&copy; CARTO" }
+    },
+    {
+      name: "Esri",
+      url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      opts: { maxZoom: 19, attribution: "Tiles &copy; Esri" }
+    }
+  ];
+
+  let baseIdx = 0;
+  let tileErrors = 0;
+  let baseLayer = null;
+
+  function setBase(i){
+    baseIdx = i % basemaps.length;
+    tileErrors = 0;
+    if(baseLayer) map.removeLayer(baseLayer);
+    const bm = basemaps[baseIdx];
+    baseLayer = L.tileLayer(bm.url, {
+      ...bm.opts,
+      // allow images to load cross-origin without tainting (helps PNG export in some browsers)
+      crossOrigin: true,
+    }).addTo(map);
+    baseLayer.on("tileerror", ()=>{
+      tileErrors++;
+      // If too many tile errors early on, fallback.
+      if(tileErrors === 8){
+        console.warn("Basemap tile errors; switching basemap to", basemaps[(baseIdx+1)%basemaps.length].name);
+        setBase(baseIdx+1);
+      }
+    });
+  }
+  setBase(0);
   markerLayer = L.layerGroup().addTo(map);
-  buildOfflineReferenceGrid();
 
   // ✅ IMPORTANT: Leaflet (and leaflet-draw) expects the map to have an initial
   // center + zoom. If we don't set it, enabling draw/edit tools can throw:
@@ -334,11 +451,11 @@ function initMap(){
   // after loading meta/grid.
   try{
     map.setView([12.0, 54.0], 5);
-    if(offlineGridLayer && offlineGridLayer.bringToBack) offlineGridLayer.bringToBack();
   }catch(_){/* ignore */}
 
   map.on("click", (e)=>{
     if(!e?.latlng) return;
+    if(isMapClickSuppressed()) return;
     $("fbLat").value = e.latlng.lat.toFixed(4);
     $("fbLon").value = e.latlng.lng.toFixed(4);
   });
@@ -346,6 +463,7 @@ function initMap(){
   // Click anywhere (when not drawing AOI) to show point details popup
   map.on("click", (e)=>{
     try{
+      if(isMapClickSuppressed()) return;
       if(($("aoiMode")?.value)==="draw") return; // avoid interfering with drawing
       showPointPopup(e.latlng.lat, e.latlng.lng);
     }catch(_){}
@@ -372,16 +490,43 @@ let hoverTooltip = null;
 // Create panes used for our custom layers
 function ensurePanes(){
   if(!map) return;
+
+  // Raster pane (image overlay) - should never block clicks
+  if(!map.getPane("rasterPane")){
+    map.createPane("rasterPane");
+    map.getPane("rasterPane").style.zIndex = 420;
+    map.getPane("rasterPane").style.pointerEvents = "none";
+  }
+
+  // Grid pane (lines + labels)
   if(!map.getPane("gridPane")){
     map.createPane("gridPane");
-    map.getPane("gridPane").style.zIndex = 450; // above overlay image, below markers
+    map.getPane("gridPane").style.zIndex = 450;
     map.getPane("gridPane").style.pointerEvents = "none";
   }
+
+  // Cluster polygon pane
   if(!map.getPane("clusterPane")){
     map.createPane("clusterPane");
-    map.getPane("clusterPane").style.zIndex = 470;
+    map.getPane("clusterPane").style.zIndex = 460;
+  }
+
+  // Cluster important points (centers + top-10)
+  if(!map.getPane("clusterTopPane")){
+    map.createPane("clusterTopPane");
+    map.getPane("clusterTopPane").style.zIndex = 470;
+  }
+
+  // Global top-10 points pane
+  if(!map.getPane("topPointPane")){
+    map.createPane("topPointPane");
+    map.getPane("topPointPane").style.zIndex = 480;
   }
 }
+
+
+
+// Draw 0.5° lat/lon grid
 
 // Draw 0.5° lat/lon grid (below points)
 function drawGrid05(){
@@ -497,18 +642,7 @@ function openInfoPopup(latlng, html){
 }
 
 function gridIndexFromLatLon(lat, lon){
-  const g = state.grid; if(!g) return null;
-  const W=g.width, H=g.height;
-  const b = ensureGridBounds(); if(!b) return null;
-  const south=b[0][0], west=b[0][1], north=b[1][0], east=b[1][1];
-  if(lat<south || lat>north || lon<west || lon>east) return null;
-
-  const fx = (lon - west) / (east - west);
-  const fyN = (north - lat) / (north - south); // 0 at north, 1 at south (image y)
-  const x = Math.max(0, Math.min(W-1, Math.round(fx*(W-1))));
-  const yImg = Math.max(0, Math.min(H-1, Math.round(fyN*(H-1))));
-  const y = state.renderFlipY ? (H-1 - yImg) : yImg;
-  return {x,y,i:y*W+x};
+  return latLonToXY(lat, lon);
 }
 
 function rankFromPercentile(pct){
@@ -864,8 +998,9 @@ function buildClustersContour(){
     let peak={v:-1, lat:0, lon:0};
     for(const ii of c.cells){
       const y=Math.floor(ii/W), x=ii - y*W;
-      const lat = g.lat_max - (g.lat_max-g.lat_min)*(y/(H-1));
-      const lon = g.lon_min + (g.lon_max-g.lon_min)*(x/(W-1));
+      const ll = xyToLatLon(x,y) || {lat:NaN, lon:NaN};
+    const lat = ll.lat;
+    const lon = ll.lon;
       const v = state.lastComputed.arrAgg[ii];
       sum += v; latSum += lat; lonSum += lon;
       if(v>mx) mx=v;
@@ -984,8 +1119,7 @@ function simplifyGridRing(pts){
 }
 
 function renderClusters(infos, thrVal, mode){
-  const clusterTops = [];
-ensurePanes();
+  ensurePanes();
   if(clusterLayer){ try{ clusterLayer.remove(); }catch(_){} clusterLayer=null; }
   if(clusterCenters){ try{ clusterCenters.remove(); }catch(_){} clusterCenters=null; }
   if(clusterTopLayer){ try{ clusterTopLayer.remove(); }catch(_){} clusterTopLayer=null; }
@@ -1008,13 +1142,14 @@ ensurePanes();
   const bestId = infos[0]?.id;
 
   const polys=[], centers=[];
+  const clusterTops=[];
   infos.forEach(info=>{
     if(!info.poly || info.poly.length<3) return;
-    const poly = L.polygon(info.poly.map(p=>[p.lat,p.lon]), {pane:"clusterPane", color: info.id===bestId ? "#F1C40F" : "#2ECC71", weight:2, fillOpacity:0.08});
-    poly.on("click", ()=> selectCluster(info));
+    const poly = L.polygon(info.poly.map(p=>[p.lat,p.lon]), {pane:"clusterPane", color:"#ff0000", weight:2, fillOpacity:0.08});
+    poly.on("click", (e)=>{ try{ suppressNextMapClick(); L.DomEvent.stop(e); }catch(_){ } selectCluster(info); });
     polys.push(poly);
 
-    const c = L.circleMarker([info.center.lat, info.center.lon], {pane:"clusterPane", radius:6, weight:2, color:"#ffffff", fillColor: info.id===bestId ? "#F1C40F" : "#2ECC71", fillOpacity:0.9});
+    const c = L.circleMarker([info.center.lat, info.center.lon], {pane:"clusterTopPane", radius:6, weight:2, color:"#ffffff", fillColor:"#ff0000", fillOpacity:0.9});
     c.on("click", (e)=>{ try{ L.DomEvent.stopPropagation(e); }catch(_){}; selectCluster(info); });
     centers.push(c);
 
@@ -1023,10 +1158,10 @@ ensurePanes();
       const icon = L.divIcon({
         className:"",
         html:`<div class="rankDot small">${j+1}</div>`,
-        iconSize:[22,22],
-        iconAnchor:[11,11]
+        iconSize:[18,18],
+        iconAnchor:[9,9]
       });
-      const mk = L.marker([p.lat, p.lon], {icon, pane:"clusterPane", bubblingMouseEvents:false, bubblingPointerEvents:false});
+      const mk = L.marker([p.lat, p.lon], {icon, pane:"clusterTopPane", bubblingMouseEvents:false, bubblingPointerEvents:false});
       mk.on("click", (e)=>{ try{ L.DomEvent.stopPropagation(e); }catch(_){}; showPointPopup(p.lat, p.lon, {kind:"cluster-top", clusterId:info.id, rank:j+1}); });
       clusterTops.push(mk);
     });
@@ -1050,6 +1185,16 @@ ensurePanes();
   }else{
     toast(lang==="fa" ? "هیچ خوشه‌ای پیدا نشد" : "No clusters found", "info", "Clusters");
   }
+}
+
+
+function clearClusters(){
+  try{ if(clusterLayer){ clusterLayer.remove(); } }catch(_){}
+  try{ if(clusterCenters){ clusterCenters.remove(); } }catch(_){}
+  try{ if(clusterTopLayer){ clusterTopLayer.remove(); } }catch(_){}
+  clusterLayer=null; clusterCenters=null; clusterTopLayer=null;
+  const listEl = $("clusterList");
+  if(listEl) listEl.innerHTML="";
 }
 
 function selectCluster(info){
@@ -1114,103 +1259,31 @@ async function scanTimeIdsFromTimesDir(){
   }
 }
 
-function selectedDepthSuffix(){
-  const v = $("depthSelect")?.value || "0";
-  // Fast runtime mode: parked depths prefer the 0 m artifact, but UI must
-  // gracefully fall back to legacy non-depth files when mixed-schema publishes exist.
-  if(v === "weighted") return "_depth_weighted";
-  if(v === "4" || v === "8" || v === "12") return `_depth_${v}m`;
-  return "_depth_0m";
-}
-
-function stripDepthSuffix(key){
-  return String(key || "").replace(/_depth_(?:0m|4m|8m|12m|weighted)$/,'');
-}
-
-function perTimeTemplateCandidates(key){
-  const per = state?.meta?.paths?.per_time || {};
-  const out = [];
-  if(key && typeof per[key] === "string") out.push({key, tpl: per[key]});
-  const baseKey = stripDepthSuffix(key);
-  if(baseKey && baseKey !== key && typeof per[baseKey] === "string") out.push({key: baseKey, tpl: per[baseKey]});
-  return out;
-}
-
-async function resolveExistingPerTimeUrl(key, tid){
-  const cands = perTimeTemplateCandidates(key);
-  for(const c of cands){
-    const url = `latest/${state.runPath}/${c.tpl.replace("{time}", tid).replace("{time_id}", tid)}`;
-    if(await exists(url)) return {url, key: c.key};
-  }
-  return null;
-}
-
-async function fetchPerTimeLayer(key, tid, dtype){
-  let lastErr = null;
-  for(const c of perTimeTemplateCandidates(key)){
-    const url = `latest/${state.runPath}/${c.tpl.replace("{time}", tid).replace("{time_id}", tid)}`;
-    try{
-      const arr = await fetchBin(url, dtype);
-      return {arr, url, key: c.key};
-    }catch(err){
-      lastErr = err;
-    }
-  }
-  throw (lastErr || new Error(`Missing per-time layer: ${key} @ ${tid}`));
-}
-
 function currentPerTimeKey(){
   const mapKey = $("mapSelect")?.value || "pcatch";
   const modelKey = $("modelSelect")?.value || "ensemble";
-
-  const ds = selectedDepthSuffix();
-  // direct environmental layers
-  if(mapKey==="front") return `front${ds}`;
-  if(mapKey==="front_boa") return `front_boa${ds}`;
-  if(mapKey==="front_gradient") return `front_gradient${ds}`;
-  if(mapKey==="front_cca") return `front_cca${ds}`;
-  if(mapKey==="front_gradhist") return `front_gradhist${ds}`;
-  if(mapKey==="front_fused") return `front_fused${ds}`;
-  if(mapKey==="sst") return `sst${ds}`;
-  if(mapKey==="chl") return `chl${ds}`;
-  if(mapKey==="current") return `current${ds}`;
-  if(mapKey==="waves") return `waves${ds}`;
-  if(mapKey==="sss") return `sss${ds}`;
-  if(mapKey==="o2") return `o2${ds}`;
-  if(mapKey==="mld") return `mld${ds}`;
-  if(mapKey==="thermocline") return `thermocline${ds}`;
-  if(mapKey==="oxygen_access") return `oxygen_access${ds}`;
-  if(mapKey==="npp") return `npp${ds}`;
-  if(mapKey==="wind_speed") return "wind_speed";
-  if(mapKey==="wind_direction") return "wind_direction";
-  if(mapKey==="setline_score") return "setline_score";
-  if(mapKey==="setline_heading") return "setline_heading";
-
-  if(mapKey==="pcatch") return `pcatch_${modelKey}${ds}`;
-  if(mapKey==="phab"){
-    // show habitat corresponding to selected model (fallback to scoring)
-    return `phab_scoring${ds}`;
-  }
-  if(mapKey==="pops") return `pops${ds}`;
-  if(mapKey==="agree") return `agree${ds}`;
-  if(mapKey==="spread") return `spread${ds}`;
-  if(mapKey==="conf") return `conf${ds}`;
-  return `pcatch_${modelKey}${ds}`;
+  if(mapKey==="pcatch") return `pcatch_${modelKey}`;
+  if(mapKey==="phab") return (modelKey==="frontplus") ? "phab_frontplus" : "phab_scoring";
+  if(mapKey==="pops") return "pops";
+  if(mapKey==="agree") return "agree";
+  if(mapKey==="spread") return "spread";
+  if(mapKey==="conf") return "conf";
+  return `pcatch_${modelKey}`;
 }
 
 async function filterTimeIdsByExistingLayer(timeIds){
   try{
     const key = currentPerTimeKey();
-    const cands = perTimeTemplateCandidates(key);
-    if(!cands.length) return timeIds;
+    const tpl = state?.meta?.paths?.per_time?.[key];
+    if(!tpl || typeof tpl!=="string") return timeIds;
 
     const good=[];
     const CONC=6;
     for(let i=0;i<timeIds.length;i+=CONC){
       const chunk = timeIds.slice(i,i+CONC);
       const res = await Promise.all(chunk.map(async tid=>{
-        const hit = await resolveExistingPerTimeUrl(key, tid);
-        return hit ? tid : null;
+        const url = `latest/${state.runPath}/${tpl.replace("{time}", tid).replace("{time_id}", tid)}`;
+        return (await exists(url)) ? tid : null;
       }));
       for(const x of res) if(x) good.push(x);
     }
@@ -1235,15 +1308,13 @@ map.on("moveend", ()=>{ try{ drawGrid05(); }catch(_){} });
   map.on("mousemove", (e)=>{
     try{
       if(!state.lastComputed?.arrShown) return;
+      const xy = latLonToXY(e.latlng.lat, e.latlng.lng);
+      if(!xy) return;
       const g = state.grid;
       const W=g.width, H=g.height;
       const lat=e.latlng.lat, lon=e.latlng.lng;
-      if(lat<g.lat_min || lat>g.lat_max || lon<g.lon_min || lon>g.lon_max) return;
-
-      const fx = (lon - g.lon_min) / (g.lon_max - g.lon_min);
-      const fy = (g.lat_max - lat) / (g.lat_max - g.lat_min);
-      const x = Math.max(0, Math.min(W-1, Math.round(fx*(W-1))));
-      const y = Math.max(0, Math.min(H-1, Math.round(fy*(H-1))));
+      const x = xy.x;
+      const y = xy.y;
       const v = state.lastComputed.arrShown[y*W+x];
       if(!Number.isFinite(v)) return;
       const p = percentileOfValue(v);
@@ -1270,6 +1341,7 @@ $("exportClustersBtn")?.addEventListener("click", ()=>{
 });
 
 $("clusterBtn")?.addEventListener("click", ()=>{ try{ buildClusters(); }catch(e){ console.error(e); } });
+$("clusterClearBtn")?.addEventListener("click", ()=>{ try{ clearClusters(); }catch(e){ console.error(e); } });
 
 $("exportTopBtn")?.addEventListener("click", ()=>{
   const top = state.lastComputed?.topFiltered || [];
@@ -1305,7 +1377,7 @@ function scheduleAnalyze(){
   _anTimer = setTimeout(()=>{ try{ computeAndRender(); }catch(_){} }, 320);
 }
 
-["gridToggle","avgToggle","aoiMode","clusterThreshold","clusterEpsKm","clusterMinPts","stepSelect","aggSelect","mapSelect","modelSelect","depthSelect"].forEach(id=>{
+["gridToggle","avgToggle","aoiMode","clusterThreshold","clusterEpsKm","clusterMinPts","stepSelect","aggSelect","mapSelect","modelSelect"].forEach(id=>{
   $(id)?.addEventListener("change", ()=>{ 
     if(id==="gridToggle"){ drawGrid05(); }
     scheduleAnalyze();
@@ -1342,11 +1414,49 @@ $("playBtnBottom")?.addEventListener("click", ()=>{
 /* ------------------------------
    Colormap (RdYlGn-like)
 ------------------------------ */
-const stops = [
-  {p:0.00, c:[40, 30, 120]},   // deep indigo
-  {p:0.55, c:[46, 204, 113]}, // green
-  {p:1.00, c:[241, 196, 15]}, // yellow
-];
+// Palette (stops) can change per layer/map. Default is blue→green→yellow.
+const PALETTES = {
+  default: [
+    {p:0.00, c:[40, 30, 120]},   // indigo
+    {p:0.55, c:[46, 204, 113]},  // green
+    {p:1.00, c:[241, 196, 15]},  // yellow
+  ],
+  conf: [
+    {p:0.00, c:[10, 10, 10]},    // near-black
+    {p:1.00, c:[240, 240, 240]}, // near-white
+  ],
+  spread: [
+    {p:0.00, c:[32, 26, 96]},    // deep blue-purple
+    {p:0.60, c:[46, 204, 113]},  // green
+    {p:1.00, c:[241, 196, 15]},  // yellow
+  ],
+  agree: [
+    {p:0.00, c:[32, 26, 96]},
+    {p:0.60, c:[46, 204, 113]},
+    {p:1.00, c:[241, 196, 15]},
+  ],
+};
+
+function getStopsForMap(mapKey){
+  // If meta provides palette, prefer it (optional).
+  try{
+    const s = state?.meta?.palettes?.[mapKey];
+    if(Array.isArray(s) && s.length>=2) return s;
+  }catch(_){}
+  return PALETTES[mapKey] || PALETTES.default;
+}
+
+function stopsToCssGradient(stops){
+  const parts = (stops||[]).map(s=>{
+    const [r,g,b]=s.c;
+    return `rgb(${r},${g},${b}) ${Math.round(s.p*100)}%`;
+  });
+  return `linear-gradient(to top, ${parts.join(", ")})`;
+}
+
+let stops = getStopsForMap(state?.map||'default');
+function refreshStops(){ stops = getStopsForMap(state?.map||'default'); }
+
 function lerp(a,b,t){return a+(b-a)*t}
 function colorFor(v01){
   // Dynamic scaling per selection (AOI + current layer)
@@ -1421,15 +1531,39 @@ function aggregatePerPixel(arrs, method){
    Rendering to overlay
 ------------------------------ */
 function setLegend(title){
-  const mn = (typeof state.scaleMin==='number') ? (state.scaleMin*100).toFixed(1) : '';
-  const mx = (typeof state.scaleMax==='number') ? (state.scaleMax*100).toFixed(1) : '';
-  const mm = (mn && mx) ? ` <span style="font-weight:700;opacity:.9">(${mn}–${mx}%)</span>` : '';
-
   const el = $("legend");
+  if(!el) return;
+
+  const mn01 = (typeof state.scaleMin==='number' && Number.isFinite(state.scaleMin)) ? state.scaleMin : null;
+  const mx01 = (typeof state.scaleMax==='number' && Number.isFinite(state.scaleMax)) ? state.scaleMax : null;
+
+  const mn = (mn01==null) ? null : (mn01*100);
+  const mx = (mx01==null) ? null : (mx01*100);
+
+  const mm = (mn!=null && mx!=null) ? ` <span style="font-weight:700;opacity:.9">(${mn.toFixed(1)}–${mx.toFixed(1)}%)</span>` : '';
+
+  // 5 ticks including min/max (shown as integers for readability)
+  const ticks = [];
+  if(mn!=null && mx!=null && mx>mn){
+    for(let i=0;i<5;i++){
+      const v = mn + (mx-mn)*(i/4);
+      ticks.push(Math.round(v));
+    }
+  }else if(mn!=null){
+    ticks.push(Math.round(mn));
+  }
+
+  // show max at top
+  const tickHtml = ticks.length ? ticks.slice().reverse().map(v=>`<div>${v}</div>`).join("") : "";
+
   el.innerHTML = `
-    <div style="font-weight:900; margin-bottom:6px">${title}${mm}</div>
-    <div class="bar"></div>
-    <div class="row2"><span>Low</span><span>High</span></div>
+    <div class="wrap">
+      <div class="title">${title}${mm}</div>
+	      <div style="display:flex; gap:10px; align-items:stretch;">
+	        <div class="bar" style="background:${stopsToCssGradient(getStopsForMap(state.map || 'default'))}"></div>
+        <div class="ticks">${tickHtml}</div>
+      </div>
+    </div>
   `;
 }
 
@@ -1448,7 +1582,7 @@ function renderOverlay(arr01, conf01){
   const N = W*H;
 
   for(let yImg=0;yImg<H;yImg++){
-    const ySrc = state.renderFlipY ? (H-1 - yImg) : yImg;
+        const ySrc = state.dataNorthFirst ? yImg : (H-1 - yImg);
     for(let x=0;x<W;x++){
       const iSrc = ySrc*W + x;
       const v = arr01[iSrc];
@@ -1466,8 +1600,9 @@ function renderOverlay(arr01, conf01){
   const url = state.canvas.toDataURL("image/png");
 
   const b = [[bounds[0][0], bounds[0][1]], [bounds[1][0], bounds[1][1]]]; // [[S,W],[N,E]]
+  ensurePanes();
   if(!imageOverlay){
-    imageOverlay = L.imageOverlay(url, b, {opacity: 1.0, interactive:false}).addTo(map);
+    imageOverlay = L.imageOverlay(url, b, {opacity: 1.0, interactive:false, pane:"rasterPane"}).addTo(map);
   }else{
     imageOverlay.setUrl(url);
     imageOverlay.setBounds(b);
@@ -1530,14 +1665,15 @@ function renderTop10(list, covs){
       <div class="muted">Lat ${pt.lat.toFixed(4)} • Lon ${pt.lon.toFixed(4)}</div>
     `;
     if(showOnMap){
+      ensurePanes();
       const icon = L.divIcon({
-        className: "",
-        html: `<div class="pulseMarkerTop"></div>`,
-        iconSize: [14,14],
-        iconAnchor: [7,7]
+        className:"",
+        html:`<div class="rankDot">${pt.rank}</div>`,
+        iconSize:[26,26],
+        iconAnchor:[13,13]
       });
-      const mk = L.marker([pt.lat, pt.lon], {icon}).addTo(markerLayer).bindPopup(popup);
-      mk.on('click', ()=>{ try{ showPointPopup(pt.lat, pt.lon); }catch(_){} });
+      const mk = L.marker([pt.lat, pt.lon], {icon, pane:"topPointPane", bubblingMouseEvents:false, bubblingPointerEvents:false}).addTo(markerLayer);
+      mk.on("click", (e)=>{ try{ suppressNextMapClick(); L.DomEvent.stop(e); }catch(_){ } showPointPopup(pt.lat, pt.lon, {kind:"top", rank:pt.rank}); });
     }
 
     const sst = covs?.sst?.[pt.rank-1];
@@ -1630,31 +1766,11 @@ function getSelectedTimes(){
 function mapTitle(){
   const m = $("mapSelect").value;
   if(m==="pcatch") return "Pcatch (Habitat×Ops)";
-  if(m==="phab") return "Habitat";
+  if(m==="phab") return "Habitat Suitability";
   if(m==="pops") return "Operational Feasibility";
-  if(m==="front") return "Front intensity (best)";
-  if(m==="front_boa") return "Front BOA";
-  if(m==="front_gradient") return "Front gradient";
-  if(m==="front_cca") return "Front CCA-lite";
-  if(m==="front_gradhist") return "Front GRADHIST-lite";
-  if(m==="front_fused") return "Front fused";
-  if(m==="sst") return "SST";
-  if(m==="chl") return "Chlorophyll";
-  if(m==="current") return "Current speed";
-  if(m==="waves") return "Wave height";
-  if(m==="sss") return "Salinity (SSS)";
-  if(m==="o2") return "Oxygen";
-  if(m==="mld") return "Mixed layer depth";
-  if(m==="thermocline") return "Thermocline proxy";
-  if(m==="oxygen_access") return "Oxygen accessibility";
-  if(m==="npp") return "Net primary production";
   if(m==="agree") return "Agreement (ensemble)";
   if(m==="spread") return "Spread/Std (ensemble)";
   if(m==="conf") return "Confidence / Opacity";
-  if(m==="wind_speed") return "Wind speed";
-  if(m==="wind_direction") return "Wind direction";
-  if(m==="setline_score") return "Best setline score";
-  if(m==="setline_heading") return "Best setline heading";
   return m;
 }
 
@@ -1668,8 +1784,8 @@ async function loadCovAtPoints(timeIso, points){
   const dy = (latMax - latMin) / (H-1);
 
   async function loadArr(key, dtype){
-    const got = await fetchPerTimeLayer(key, timeId, dtype);
-    return got.arr;
+    const url = `latest/${state.runPath}/${state.meta.paths.per_time[key].replace("{time}", timeId)}`;
+    return fetchBin(url, dtype);
   }
   const [sst, chl, cur, wav] = await Promise.all([
     loadArr("sst","f32"), loadArr("chl","f32"), loadArr("current","f32"), loadArr("waves","f32")
@@ -1705,8 +1821,8 @@ async function getConfAggregated(timeIsos){
   if(state.qcOn){
     const qcArrs = await Promise.all(timeIsos.map(async t=>{
       const tid = timeIdFromIso(t);
-      const got = await fetchPerTimeLayer("qc_chl", tid, "u8");
-      return got.arr;
+      const url = `latest/${state.runPath}/${state.meta.paths.per_time.qc_chl.replace("{time}", tid)}`;
+      return fetchBin(url,"u8");
     }));
     const qcMean = new Float32Array(conf.length);
     for(let i=0;i<conf.length;i++){
@@ -1747,6 +1863,7 @@ function renderFromCache(){
   const arrShown = applyFilterMaskToArray(arrAgg);
   const confShown = (confAgg && confAgg.length===arrShown.length) ? confAgg : new Float32Array(arrShown.length).fill(1);
 
+  refreshStops();
   setLegend(mapTitle());
   renderOverlay(arrShown, confShown);
 
@@ -1757,7 +1874,7 @@ function renderFromCache(){
   const dist = state._distVals || [];
   topFiltered.forEach((pt, idx)=>{
     pt.rank = idx+1;
-    pt.pct = (typeof percentileOfValue==='function') ? percentileOfValue(pt.p) : null;
+    pt.pct = (typeof percentileOfValue==='function') ? percentileOfValue(pt.p/100) : null;
   });
   state.lastComputed.topFiltered = topFiltered;
 
@@ -1780,40 +1897,30 @@ async function computeAndRender(){
 
   // load arrays for selected layer
   async function loadLayerForTime(timeIso){
-  const tid = timeIdFromIso(timeIso);
-  let key = null;
-
-  // direct env layers
-  if(mapKey==="front") key = "front";
-  else if(mapKey==="sst") key = "sst";
-  else if(mapKey==="chl") key = "chl";
-  else if(mapKey==="current") key = "current";
-  else if(mapKey==="waves") key = "waves";
-  else if(mapKey==="pcatch"){
-    key = `pcatch_${modelKey}`;
-  }else if(mapKey==="phab"){
-    // habitat corresponding to selected model
-    if(modelKey==="hybrid") key = "phab_hybrid";
-    else if(modelKey==="enm") key = "phab_enm";
-    else key = "phab_scoring";
-  }else if(mapKey==="pops"){
-    key = "pops";
-  }else if(mapKey==="agree"){
-    key = "agree";
-  }else if(mapKey==="spread"){
-    key = "spread";
-  }else if(mapKey==="conf"){
-    key = "conf";
-  }else{
-    key = `pcatch_${modelKey}`;
-  }
-    try{
-      const got = await fetchPerTimeLayer(key, tid, (key.endsWith("_u8")?"u8":"f32"));
-      return got.arr;
-    }catch(err){
-      console.warn("Missing layer template or file:", key, tid, err);
+    const tid = timeIdFromIso(timeIso);
+    let key = null;
+    if(mapKey==="pcatch"){
+      key = `pcatch_${modelKey}`;
+    }else if(mapKey==="phab"){
+      key = (modelKey==="frontplus") ? "phab_frontplus" : "phab_scoring";
+    }else if(mapKey==="pops"){
+      key = "pops";
+    }else if(mapKey==="agree"){
+      key = "agree";
+    }else if(mapKey==="spread"){
+      key = "spread";
+    }else if(mapKey==="conf"){
+      key = "conf";
+    }else{
+      key = `pcatch_${modelKey}`;
+    }
+    const tpl = state.meta.paths.per_time[key];
+    if(!tpl || typeof tpl !== "string"){
+      console.warn("Missing layer template:", key);
       return new Float32Array(W*H).fill(NaN);
     }
+    const url = `latest/${state.runPath}/${tpl.replace("{time}", tid)}`;
+    return fetchBin(url, (key.endsWith("_u8")?"u8":"f32"));
   }
 
   const arrs = await Promise.all(timeIsos.map(loadLayerForTime));
@@ -1916,7 +2023,7 @@ async function loadSpeciesMetaAndInit(){
   ensureGridBounds();
 // load server mask
   const maskUrl = `latest/${state.runPath}/${state.meta.paths.mask}`;
-  state.baseMask = await fetchBin(maskUrl, "u8");
+  state.baseMask = normalizeServerMask(await fetchBin(maskUrl, "u8"));
 
   // effective analysis mask = server mask × user AOI
   state.analysisMask = combineMask(state.baseMask, state.userMask);
@@ -1968,21 +2075,22 @@ async function loadSpeciesMetaAndInit(){
   applyLookback();
 
 
-  // AOI UI defaults (bbox = grid bounds)
-  $("bboxLatMin").value = state.grid.lat_min.toFixed(4);
-  $("bboxLatMax").value = state.grid.lat_max.toFixed(4);
-  $("bboxLonMin").value = state.grid.lon_min.toFixed(4);
-  $("bboxLonMax").value = state.grid.lon_max.toFixed(4);
+  // AOI UI defaults (bbox = normalized grid bounds)
+  const __b = ensureGridBounds() || [[state.grid.lat_min, state.grid.lon_min],[state.grid.lat_max, state.grid.lon_max]];
+  $("bboxLatMin").value = Number(__b[0][0]).toFixed(4);
+  $("bboxLatMax").value = Number(__b[1][0]).toFixed(4);
+  $("bboxLonMin").value = Number(__b[0][1]).toFixed(4);
+  $("bboxLonMax").value = Number(__b[1][1]).toFixed(4);
   // Don't erase user's AOI on species switch if it exists (AOI is a user intent)
   if(!state.userMask){
     state.userMask = null;
   }
   state.analysisMask = combineMask(state.baseMask, state.userMask);
   // init filter bbox defaults too
-  $("filterBboxLatMin").value = state.grid.lat_min.toFixed(4);
-  $("filterBboxLatMax").value = state.grid.lat_max.toFixed(4);
-  $("filterBboxLonMin").value = state.grid.lon_min.toFixed(4);
-  $("filterBboxLonMax").value = state.grid.lon_max.toFixed(4);
+  $("filterBboxLatMin").value = Number(__b[0][0]).toFixed(4);
+  $("filterBboxLatMax").value = Number(__b[1][0]).toFixed(4);
+  $("filterBboxLonMin").value = Number(__b[0][1]).toFixed(4);
+  $("filterBboxLonMax").value = Number(__b[1][1]).toFixed(4);
   updateAoiStatus();
 
   // filter status
@@ -2040,27 +2148,12 @@ async function loadSpeciesMetaAndInit(){
 
   // compute
   setDirty();
-
-  // In offline-map mode there is no basemap, so without an initial render the
-  // viewport can look like a blank white map even when fetches succeeded.
-  const shouldAutoRender = !!($("autoAnalyzeToggle")?.checked);
-  if(state.times?.length && shouldAutoRender){
-    clearTimeout(state._initialRenderTimer);
-    state._initialRenderTimer = setTimeout(async ()=>{
-      try{
-        await computeAndRender();
-        try{ map.invalidateSize(true); }catch(_){ }
-      }catch(err){
-        console.warn('Initial auto-render failed', err);
-      }
-    }, 120);
-  }
 }
 
 /* ------------------------------
    UI events
 ------------------------------ */
-["speciesSelect","modelSelect","mapSelect","aggSelect","t0Select","t1Select","depthSelect"].forEach(id=>{
+["speciesSelect","modelSelect","mapSelect","aggSelect","t0Select","t1Select"].forEach(id=>{
   $(id).addEventListener("change", async ()=>{
     const prevSpecies = state.species;
     state.species = $("speciesSelect").value;
@@ -2541,39 +2634,17 @@ function getSelectedTimeId(){
 // ---- Debug / console helpers (so claims are testable) ----
 window.state = state;
 window.__SY = window.__SY || {};
-window.__SY.version = "ui-debug-v4";
-window.__SY.setFlipY = (v)=>{ state.renderFlipY = !!v; try{ renderFromCache(); }catch(_){} };
+window.__SY.version = "ui-align-v6";
+window.__SY.setFlipY = (v)=>{ state.dataNorthFirst = !!v; try{ renderFromCache(); }catch(_){} }; // true => row0 NORTH
+window.__SY.setRenderFlipY = (v)=>{ state.dataNorthFirst = ! (!!v); try{ renderFromCache(); }catch(_){} }; // legacy: true => row0 SOUTH
 window.__SY.setBoundsPad = (v)=>{ state.boundsPad = !!v; try{ if(state.grid) state.grid.bounds=null; ensureGridBounds(); renderFromCache(); }catch(_){} };
-window.__SY.diag = ()=>{
-  const img = document.querySelector('#map img.leaflet-image-layer');
-  const arr = state?.lastComputed?.arrAgg;
-  let finite = 0, min = Infinity, max = -Infinity;
-  if(arr && arr.length){
-    for(let i=0;i<arr.length;i++){
-      const v = arr[i];
-      if(Number.isFinite(v)){
-        finite++;
-        if(v < min) min = v;
-        if(v > max) max = v;
-      }
-    }
-  }
-  return {
-    runPath: state.runPath,
-    species: state.species,
-    map: state.map,
-    model: state.model,
-    times: state.timeIds?.length || 0,
-    selectedTime: state.timeIds?.[$('t1Select')?.selectedIndex ?? -1] || null,
-    grid: state.grid,
-    overlayExists: !!window.imageOverlay,
-    overlayImgSrc: img?.src || null,
-    overlayImgOpacity: img ? getComputedStyle(img).opacity : null,
-    finitePixels: finite,
-    minFinite: Number.isFinite(min) ? min : null,
-    maxFinite: Number.isFinite(max) ? max : null,
-    autoAnalyze: !!($("autoAnalyzeToggle")?.checked),
-  };
-};
+window.__SY.setOffsets = (dLat, dLon)=>{ state.manualLatOffset = Number(dLat||0); state.manualLonOffset = Number(dLon||0); try{ if(state.grid) state.grid.bounds=null; ensureGridBounds(); renderFromCache(); }catch(e){ console.error(e);} };
+window.__SY.suppress = (ms=250)=>{ suppressNextMapClick(ms); return state.__suppressMapClickUntil; };
+window.__SY.getSuppress = ()=> state.__suppressMapClickUntil;
+
+window.__SY.xyToLatLon = xyToLatLon;
+window.__SY.latLonToXY = latLonToXY;
+
+
 window._gridIndexFromLatLon = gridIndexFromLatLon;
 window._rankFromPercentile = (typeof rankFromPercentile==="function") ? rankFromPercentile : ((x)=>null);
